@@ -1,0 +1,35 @@
+import ativo from '@/database/ativo';
+
+export default async function handler(req, res) {
+
+    if (req.method === 'GET') {
+        if (req.body._id) {
+            const active = await ativo.DB.findById(req.body._id);
+            res.status(200).json(active);
+        } else {
+            let actives;
+            if(req.body){
+                actives = await ativo.DB.find(req.body);
+            }else{
+                actives = await ativo.DB.find();
+            }
+            res.status(200).json(actives);
+        }
+    } else if (req.method === 'POST') {
+        const active = await ativo.DB.create(req.body);
+        res.status(200).json(active);
+    } else if (req.method === 'PUT') {
+        await ativo.DB.findByIdAndUpdate(req.body._id, { updatedAt: new Date() });
+        const active = await ativo.DB.findByIdAndUpdate(req.body._id, req.body);
+        res.status(200).json(active);
+    } else if (req.method === 'DELETE') {
+        let active = await ativo.DB.findById(req.body._id);
+        req.body.bloqueado = !active.bloqueado;
+        active = await ativo.DB.findByIdAndUpdate(req.body._id,
+            {
+                updatedAt: new Date(),
+                bloqueado: req.body.bloqueado
+            });
+        res.status(200).json(active);
+    }
+}
