@@ -8,7 +8,7 @@ export default function Marcas() {
     const [_id, setId] = useState('');
     const [busca, setBusca] = useState('');
     const [lista, setLista] = useState([]);
-    const listaFiltrada = lista.filter(item => item.nome)
+    const listaFiltrada = lista.filter(item => item.nome.toLowerCase().includes(busca.toLowerCase()));
 
     useEffect(() => {
         getLista();
@@ -61,12 +61,12 @@ export default function Marcas() {
                     <>
                         <div className='d-flex justify-content-end'>
                             <div className="col-xs-12 col-md-6 col-xl-4 ">
-                                <input className='form-control' id='buscar' placeholder='Buscar' onChange={e => setBusca()} />
+                                <input className='form-control' id='buscar' placeholder='Buscar' onChange={e => setBusca(e.target.value)} />
                             </div>
                         </div>
 
                         <div className='d-flex flex-wrap'>
-                            {lista.map(item => {
+                            {listaFiltrada.map(item => {
                                 return (
                                     <div key={item._id} className="col-12 col-md-4 col-xl-3 rounded p-2">
                                         <div className="border p-2 rounded">

@@ -9,7 +9,7 @@ export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const { setUsuario, setToken } = useContext(UserContext);
+  const { setUsuario, setToken, setIntoSystem } = useContext(UserContext);
 
   function logar(){
     axios.post('/api/login', {
@@ -22,6 +22,7 @@ export default function Login() {
       localStorage.setItem("token",data.token);
       setUsuario(data.usuario);
       setToken(data.token);
+      setIntoSystem(true);
       router.push('/home');
     })
     .catch(err => {

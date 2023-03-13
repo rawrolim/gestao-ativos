@@ -3,9 +3,9 @@ import { useContext } from 'react'
 import { FaList, FaUserCircle } from 'react-icons/fa';
 
 export default function Header(props) {
-    const { usuario, setMenuAberto, menuAberto, sair } = useContext(UserContext);
+    const { usuario, setMenuAberto, menuAberto, sair, intoSystem } = useContext(UserContext);
 
-    if (usuario !== null) {
+    if (usuario !== null && intoSystem) {
         return (
             <nav className="bg-dark p-3 d-flex shadow">
                 <button className='btn text-white' onClick={() => { setMenuAberto(!menuAberto) }}>
