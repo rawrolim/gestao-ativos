@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-export default function Marcas() {
+export default function Home() {
     const [nome, setNome] = useState('');
     const [_id, setId] = useState('');
     const [busca, setBusca] = useState('');
@@ -16,44 +16,44 @@ export default function Marcas() {
     }, [])
 
     async function getLista() {
-        const res = await axios.get('/api/marca');
+        const res = await axios.get('/api/localidade');
         setLista(res.data);
     }
 
     async function salvar() {
         if (_id === '') {
-            await axios.post('/api/marca', {
+            await axios.post('/api/localidade', {
                 nome
             });
         } else {
-            await axios.put('/api/marca', {
+            await axios.put('/api/localidade', {
                 _id,
                 nome
             });
         }
-        toast.success('Marca cadastrada com sucesso.');
+        toast.success('Local cadastrado com sucesso.');
         setNome('');
         setId('');
         getLista();
     }
 
     async function updateStatus(_id, status) {
-        await axios.put('/api/marca', {
+        await axios.put('/api/localidade', {
             _id,
             bloqueado: !status
         });
-        toast.success(`Marca ${!status? 'bloqueada': 'ativada'} com sucesso.`)
+        toast.success(`Local ${!status? 'bloqueado': 'ativado'} com sucesso.`)
         getLista();
     }
 
     async function deleteItem(_id){
-        await axios.delete('/api/marca', {
+        await axios.delete('/api/localidade', {
             data: {
                 _id
             }
         })
         .then(()=>{
-            toast.success("Marca deletada com sucesso.");
+            toast.success("Local deletado com sucesso.");
             getLista();
         })
     }
@@ -61,7 +61,7 @@ export default function Marcas() {
     return (
         <main className="p-3 col" >
             <div className="mb-4 fs-4">
-                Marcas
+                Local
             </div>
             <div className='form-floating btn-group col-12'>
                 <input value={nome} className='form-control' id='cadastrar' type='text' placeholder="Cadastrar" onChange={e => setNome(e.target.value)} />
@@ -134,4 +134,4 @@ export default function Marcas() {
             </div>
         </main>
     )
-}
+}  

@@ -1,10 +1,12 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import moment from "moment/moment";
 import { FaCheck, FaTimes, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { UserContext } from "@/store/userContext";
 
 export default function Usuarios() {
+    const { usuario } = useContext(UserContext);
     const [motivo_bloqueio_txt, setMotivoBloqueioTxt] = useState("");
     const [_id, setId] = useState("");
     const [busca, setBusca] = useState("");
@@ -20,8 +22,8 @@ export default function Usuarios() {
             .then(r => setLista(r.data))
     }
 
-    async function ativarStatus(_id){
-        await axios.put('/api/usuario',{
+    async function ativarStatus(_id) {
+        await axios.put('/api/usuario', {
             _id,
             motivo_bloqueio: '',
             bloqueado: false
@@ -30,19 +32,23 @@ export default function Usuarios() {
         getLista();
     }
 
-    async function bloquearStatus(){
-        await axios.put('/api/usuario', {
-            _id,
-            motivo_bloqueio: motivo_bloqueio_txt,
-            bloqueado: true
-        });
-        setMotivoBloqueioTxt("");
-        setId('');
-        toast.success('Usuário bloqueado com sucesso.');
-        getLista();
+    async function bloquearStatus() {
+        if (usuario._id === _id) {
+            toast.error('Não é possível bloquear o próprio usuário.');
+        } else {
+            await axios.put('/api/usuario', {
+                _id,
+                motivo_bloqueio: motivo_bloqueio_txt,
+                bloqueado: true
+            });
+            setMotivoBloqueioTxt("");
+            setId('');
+            toast.success('Usuário bloqueado com sucesso.');
+            getLista();
+        }
     }
 
-    async function deleteItem(_id){
+    async function deleteItem(_id) {
         await axios.delete('/api/usuario', {
             "data": {
                 _id
@@ -54,6 +60,9 @@ export default function Usuarios() {
 
     return (
         <main className="p-3 col" >
+            <div className="mb-4 fs-4">
+                Usuários
+            </div>
             <div className='d-flex flex-wrap justify-content-end'>
                 <div className="col-xs-12 col-md-6 col-xl-4 ">
                     <input className='form-control' id='buscar' placeholder='Buscar' onChange={e => setBusca(e.target.value)} />
@@ -117,7 +126,7 @@ export default function Usuarios() {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <textarea className='form-control' value={motivo_bloqueio_txt} onChange={e=>setMotivoBloqueioTxt(e.target.value)} />
+                            <textarea className='form-control' value={motivo_bloqueio_txt} onChange={e => setMotivoBloqueioTxt(e.target.value)} />
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>

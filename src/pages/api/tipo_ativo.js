@@ -23,13 +23,7 @@ export default async function handler(req, res) {
         const active_type = await tipo_ativo.DB.findByIdAndUpdate(req.body._id, req.body);
         res.status(200).json(active_type);
     } else if (req.method === 'DELETE') {
-        let active_type = await tipo_ativo.DB.findById(req.body._id);
-        req.body.bloqueado = !active_type.bloqueado;
-        active_type = await tipo_ativo.DB.findByIdAndUpdate(req.body._id,
-            {
-                updatedAt: new Date(),
-                bloqueado: req.body.bloqueado
-            });
-        res.status(200).json(active_type);
+        await tipo_ativo.DB.findByIdAndDelete(req.body._id)
+        res.status(200).json();
     }
 }
