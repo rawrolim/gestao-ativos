@@ -49,15 +49,24 @@ export default function formularioUsuario() {
             setErroSenhaRepetida('is-invalid');
         }
 
-
         if (!erro) {
+            toast.promise(
             axios.post("/api/usuario", {
                 nome: nome,
                 senha: senha,
                 email: email,
                 telefone: telefone
-            }).then(()=>{
+            }),{
+                "pending": "Enviando ..."
+            })
+            .then(async (r)=>{
+                const data = r.data;
                 toast.success('Usuário salvo com sucesso');
+                await axios.post('/api/email',{
+                    id: data._id,
+                    nome: data.nome,
+                    email: data.email
+                });
                 router.push('login');
             }).catch(e=>{
                 toast.error(e.message);
@@ -98,9 +107,9 @@ export default function formularioUsuario() {
                 <label htmlFor="password_2">Repita a Senha</label>
             </div>
 
-            <div className='col-12 mt-3 text-center'>
-                <button className='btn btn-lg btn-primary col-12 col-md-6 col-xl-3 me-2' onClick={()=>{router.push('/zx')}}>Cancelar</button>
-                <button className='btn btn-lg btn-primary col-12 col-md-6 col-xl-3' onClick={save}>Salvar</button>
+            <div className='col-12 mt-3 text-center btn-group'>
+                <button className='btn btn-lg btn-secondary col-6 col-xl-3' onClick={()=>{router.push('/login')}}>Cancelar</button>
+                <button className='btn btn-lg btn-primary col-6 col-xl-3' onClick={save}>Salvar</button>
             </div>
         </main>
     )

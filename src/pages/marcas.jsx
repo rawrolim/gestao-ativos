@@ -1,7 +1,8 @@
 import axios from "axios";
 import moment from "moment/moment";
 import { useEffect, useState } from "react"
-import { FaCheck, FaEdit, FaTimes } from "react-icons/fa";
+import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function Marcas() {
     const [nome, setNome] = useState('');
@@ -30,17 +31,31 @@ export default function Marcas() {
                 nome
             });
         }
+        toast.success('Marca cadastrada com sucesso.');
         setNome('');
         setId('');
         getLista();
     }
 
-    async function updateStatus(_id,status){
+    async function updateStatus(_id, status) {
         await axios.put('/api/marca', {
             _id,
             bloqueado: !status
         });
+        toast.success(`Marca ${!status? 'bloqueada': 'ativada'} com sucesso.`)
         getLista();
+    }
+
+    async function deleteItem(_id){
+        await axios.delete('/api/marca', {
+            data: {
+                _id
+            }
+        })
+        .then(()=>{
+            toast.success("Marca deletada com sucesso.");
+            getLista();
+        })
     }
 
     return (
@@ -84,15 +99,21 @@ export default function Marcas() {
                                             </div>
                                             <div className='btn-group mt-2 col-12'>
                                                 {!item.bloqueado ?
-                                                    <button className="btn btn-danger" onClick={()=>{updateStatus(item._id,item.bloqueado)}} >
+                                                    <button className="btn btn-danger" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
                                                         <FaTimes />
                                                         Bloquear
                                                     </button>
                                                     :
-                                                    <button className="btn btn-success"  onClick={()=>{updateStatus(item._id,item.bloqueado)}} >
-                                                        <FaCheck />
-                                                        Ativar
-                                                    </button>
+                                                    <>
+                                                        <button className="btn btn-success" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
+                                                            <FaCheck />
+                                                            Ativar
+                                                        </button>
+                                                        <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
+                                                            <FaTrash />
+                                                            Excluir
+                                                        </button>
+                                                    </>
                                                 }
                                                 <button className="btn btn-primary" onClick={() => { setId(item._id); setNome(item.nome) }}>
                                                     <FaEdit />

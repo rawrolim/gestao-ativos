@@ -12,7 +12,11 @@ export const UserProvider = ({ children }) => {
 
     useEffect(()=>{
         setUsuario(JSON.parse(localStorage.getItem('usuario')));
-        setIntoSystem(true);
+        if(usuario !== null && location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== "/formularioUsuario"){
+            setIntoSystem(true);
+        }else{
+            setIntoSystem(false);
+        }
     },[]);
 
     function sair(){
