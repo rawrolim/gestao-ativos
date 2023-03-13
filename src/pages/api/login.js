@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
-        const usuarios = await usuarioDB.find();
+        const usuarios = await usuarioDB.DB.find();
 
         const usuario = usuarios.find(user => user.email === req.body.email && user.senha === md5(req.body.senha))
 
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
             refreshToken: generateToken()
         };
 
-        await usuarioDB.findByIdAndUpdate(usuario._id, {
+        await usuarioDB.DB.findByIdAndUpdate(usuario._id, {
             refreshToken: jwtData.refreshToken
         });
         usuario.refreshToken = jwtData.refreshToken;

@@ -12,19 +12,22 @@ const AtivoSchema = new mongoose.Schema({
     modelo: {
         type: String
     },
+    serial: {
+        type: String
+    },
     comentarios: [],
     historico: [],
     marca: {
-        type: marca.MarcaSchema
+        
     },
     tipo_ativo: {
-        type: tipo_ativo.TipoAtivoSchema
+        
     },
     localidade: {
-        type: localidade.LocalidadeSchema
+        
     },
     responsavel: {
-        type: usuario.UsuarioSchema
+        
     },
     createdAt: {
         type: Date,
