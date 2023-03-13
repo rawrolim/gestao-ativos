@@ -1,9 +1,15 @@
-import Header from '@/components/header'
-import Menu from '@/components/menu'
-import '@/styles/globals.scss'
-import { UserProvider } from '../store/userContext'
+import Header from '@/components/header';
+import Menu from '@/components/menu';
+import '@/styles/globals.scss';
+import { UserProvider } from '../store/userContext';
+import { useEffect } from 'react';
 
 export default function App({ Component, pageProps }) {
+
+  useEffect(() => {
+    require("bootstrap/dist/js/bootstrap.min.js");
+  }, []);
+
   return (
     <UserProvider >
       <Header showUser={true} />
