@@ -3,13 +3,13 @@ import localidade from '@/database/localidade';
 export default async function handler(req, res) {
 
     if (req.method === 'GET') {
-        if (req.body._id) {
-            const locale = await localidade.DB.findById(req.body._id);
+        if (req.query._id) {
+            const locale = await localidade.DB.findById(req.query._id);
             res.status(200).json(locale);
         } else {
             let locales;
-            if(req.body){
-                locales = await localidade.DB.find(req.body);
+            if(req.query){
+                locales = await localidade.DB.find(req.query);
             }else{
                 locales = await localidade.DB.find();
             }

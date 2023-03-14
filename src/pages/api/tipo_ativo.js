@@ -3,13 +3,13 @@ import tipo_ativo from '@/database/tipo_ativo';
 export default async function handler(req, res) {
 
     if (req.method === 'GET') {
-        if (req.body._id) {
-            const active_type = await tipo_ativo.DB.findById(req.body._id);
+        if (req.query._id) {
+            const active_type = await tipo_ativo.DB.findById(req.query._id);
             res.status(200).json(active_type);
         } else {
             let active_type;
-            if(req.body){
-                active_type = await tipo_ativo.DB.find(req.body);
+            if(req.query){
+                active_type = await tipo_ativo.DB.find(req.query);
             }else{
                 active_type = await tipo_ativo.DB.find();
             }

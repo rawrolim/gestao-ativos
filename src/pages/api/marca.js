@@ -3,13 +3,13 @@ import marca from '@/database/marca';
 export default async function handler(req, res) {
 
     if (req.method === 'GET') {
-        if (req.body._id) {
-            const brand = await marca.DB.findById(req.body._id);
+        if (req.query._id) {
+            const brand = await marca.DB.findById(req.query._id);
             res.status(200).json(brand);
         } else {
             let brand;
-            if(req.body){
-                brand = await marca.DB.find(req.body);
+            if(req.query){
+                brand = await marca.DB.find(req.query);
             }else{
                 brand = await marca.DB.find();
             }

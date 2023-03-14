@@ -3,13 +3,13 @@ import md5 from 'md5';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
-    if (req.body._id) {
-      const user = await usuarioDB.DB.findById(req.body._id);
+    if (req.query._id) {
+      const user = await usuarioDB.DB.findById(req.query._id);
       res.status(200).json(user);
     } else {
       let users;
-      if (req.body) {
-        users = await usuarioDB.DB.find(req.body);
+      if (req.query) {
+        users = await usuarioDB.DB.find(req.query);
       } else {
         users = await usuarioDB.DB.find();
       }

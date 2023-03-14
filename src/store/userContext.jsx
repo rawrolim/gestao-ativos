@@ -10,16 +10,20 @@ export const UserProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const router = useRouter();
 
-    useEffect(()=>{
-        setUsuario(JSON.parse(localStorage.getItem('usuario')));
-        if(usuario !== null && location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== "/formularioUsuario"){
+    useEffect(() => {
+        let usuarioTemp = JSON.parse(localStorage.getItem('usuario'));
+        setUsuario(usuarioTemp);
+        
+        if (usuarioTemp !== null && location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== "/formularioUsuario") {
             setIntoSystem(true);
-        }else{
+        } else {
             setIntoSystem(false);
         }
-    },[]);
+    }, []);
 
-    function sair(){
+    
+
+    function sair() {
         localStorage.clear();
         setUsuario(null);
         setIntoSystem(false);

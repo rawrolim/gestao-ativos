@@ -3,13 +3,13 @@ import ativo from '@/database/ativo';
 export default async function handler(req, res) {
 
     if (req.method === 'GET') {
-        if (req.body._id) {
-            const active = await ativo.DB.findById(req.body._id);
+        if (req.query._id) {
+            const active = await ativo.DB.findById(req.query._id);
             res.status(200).json(active);
         } else {
             let actives;
-            if(req.body){
-                actives = await ativo.DB.find(req.body);
+            if(req.query){
+                actives = await ativo.DB.find(req.query);
             }else{
                 actives = await ativo.DB.find();
             }

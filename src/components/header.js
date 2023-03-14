@@ -15,12 +15,12 @@ export default function Header(props) {
                     Gestão de ativos
                 </div>
                 {props.showUser ?
-                    <div className="text-end align-self-center dropdown">
+                    <div className="text-end align-self-center dropdown dropstart">
                         <button className='btn text-light dropdown-toggle' type="button" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                            Olá, {usuario.nome}
+                            <label className="text-light d-none d-md-inline">Olá, {usuario.nome}</label>
                             <FaUserCircle size={30} className="ms-2" />
                         </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownUser">
+                        <ul class="dropdown-menu " aria-labelledby="dropdownUser">
                             <li><a class="dropdown-item" onClick={sair}>Sair</a></li>
                         </ul>
                     </div>
