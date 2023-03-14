@@ -10,7 +10,6 @@ export default function Formulario() {
     const [usuarios, setUsuario] = useState([]);
     const [localidades, setLocalidades] = useState([]);
 
-    const [nome, setNome] = useState('');
     const [modelo, setModelo] = useState('');
     const [tipo_ativo, setTipoAtivo] = useState('');
     const [marca, setMarca] = useState('');
@@ -58,9 +57,6 @@ export default function Formulario() {
 
     function salvar() {
         let erro = "";
-        if (nome === '') {
-            erro = "Insira o nome. ";
-        }
         if(modelo===''){
             erro += "Insira o numero de série. ";
         }
@@ -82,7 +78,6 @@ export default function Formulario() {
 
         if (erro === "") {
             axios.post('/api/ativo', {
-                nome,
                 modelo,
                 serial,
                 tipo_ativo: JSON.parse(tipo_ativo),
@@ -101,15 +96,11 @@ export default function Formulario() {
         <main className="col d-flex flex-wrap" >
             <h3 className='col-12'>Cadastro de ativos</h3>
 
-            <div className='col-12 col-md-4 p-2'>
-                <label className='text-light'>Nome</label>
-                <input type="text" className="form-control" onChange={e => { setNome(e.target.value) }} />
-            </div>
-            <div className='col-12 col-md-4 p-2'>
+            <div className='col-12 col-md-6 p-2'>
                 <label className='text-light'>Modelo</label>
                 <input type="text" className="form-control" onChange={e => { setModelo(e.target.value) }} />
             </div>
-            <div className='col-12 col-md-4 p-2'>
+            <div className='col-12 col-md-6 p-2'>
                 <label className='text-light'>Número de série</label>
                 <input type="text" className="form-control" onChange={e => { setSerial(e.target.value) }} />
             </div>

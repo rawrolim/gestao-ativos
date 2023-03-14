@@ -95,10 +95,10 @@ export default function Marcas() {
                                                 <label className="fw-bolder text-light">Bloqueado:</label>  {item.bloqueado ? "Sim" : "Não"}
                                             </div>
                                             <div>
-                                                <label className="fw-bolder text-light">Data Criação:</label>  {moment(item.createdAt).format("DD/MM/YYYY hh:mm")}
+                                                <label className="fw-bolder text-light">Data Criação:</label>  {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
                                             </div>
                                             <div>
-                                                <label className="fw-bolder text-light">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY hh:mm")}
+                                                <label className="fw-bolder text-light">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
                                             </div>
                                             <div className='btn-group mt-2 col-12'>
                                                 {!item.bloqueado ?

@@ -16,6 +16,7 @@ export default async function handler(req, res) {
             res.status(200).json(actives);
         }
     } else if (req.method === 'POST') {
+        req.body.historico = [{message:'Ativo criado', createdAt: new Date()}];
         const active = await ativo.DB.create(req.body);
         res.status(200).json(active);
     } else if (req.method === 'PUT') {

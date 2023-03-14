@@ -5,10 +5,6 @@ import tipo_ativo from './tipo_ativo';
 import usuario from './usuario';
 
 const AtivoSchema = new mongoose.Schema({
-    nome: {
-        type: String,
-        required: true
-    },
     modelo: {
         type: String
     },
