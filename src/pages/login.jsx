@@ -73,7 +73,7 @@ export default function Login() {
           : null}
 
         <div className='text-end pt-2'>
-          <a href=''>Esqueci a senha</a>
+          <a onClick={()=>{ router.push('/esqueci_senha') }} style={{textDecoration: 'underline'}}>Esqueci a senha</a>
         </div>
         <div className=' mt-3 d-grid gap-2'>
           <button className='btn btn-primary' onClick={logar}>Entrar</button>

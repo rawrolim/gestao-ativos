@@ -9,6 +9,9 @@ export default async function handler(req, res) {
     } else {
       let users;
       if (req.query) {
+        if(req.query.email){
+          req.query.email.replace("%40","@");
+        }
         users = await usuarioDB.DB.find(req.query);
       } else {
         users = await usuarioDB.DB.find();
@@ -25,6 +28,8 @@ export default async function handler(req, res) {
       const userActual = await usuarioDB.DB.findById(req.body._id);
       if (md5(req.body.senha) !== userActual.senha) {
         req.body.senha = md5(req.body.senha);
+      }else{
+        req.body.senha = userActual.senha;
       }
     }
     await usuarioDB.DB.findByIdAndUpdate(req.body._id, { updatedAt: new Date() });
