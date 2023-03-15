@@ -203,7 +203,7 @@ export default function Ativos() {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            {comentarios.map(comentarioCurrent => {
+                            {usuario!==null && comentarios.map(comentarioCurrent => {
                                 return (
                                     <>
                                         {comentarioCurrent.usuario._id === usuario._id ?

@@ -23,7 +23,6 @@ export default function Menu() {
                         <li className="list-group-item" onClick={() => { router.push('/tipo_ativos') }}>Tipo Ativo</li>
                         <li className="list-group-item" onClick={() => { router.push('/localidades') }}>Local</li>
                         <li className="list-group-item" onClick={() => { router.push('/usuarios') }}>Usuários</li>
-                        <li className="list-group-item d-inline d-md-none" onClick={sair}>Sair</li>
                     </ul>
                 </aside>
             </>
