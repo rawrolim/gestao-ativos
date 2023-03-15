@@ -28,7 +28,7 @@ const handler = async (req, res) => {
                         user-select: none;
                         border: 1px solid transparent;
                         box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-                        " target="_blank" href="${process.env.VERCEL_URL + 'email/' + req.body.id}">Clique aqui</a>
+                        " target="_blank" href="${process.env.VERCEL_URL + '/email/' + req.body.id}">Clique aqui</a>
                 </div>
             </div>
         </body>

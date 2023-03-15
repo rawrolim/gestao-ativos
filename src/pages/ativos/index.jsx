@@ -66,19 +66,19 @@ export default function Ativos() {
                                     <label className='fw-bolder text-light'>Modelo: </label> {item.modelo}
                                 </div>
                                 <div>
-                                    <label className='fw-bolder text-light'>Tipo de ativo: </label> {item.tipo_ativo.nome}
+                                    <label className='fw-bolder text-light'>Tipo de ativo: </label> {item.tipo_ativo_obj.nome}
                                 </div>
                                 <div>
-                                    <label className='fw-bolder text-light'>marca: </label> {item.marca.nome}
+                                    <label className='fw-bolder text-light'>marca: </label> {item.marca_obj.nome}
                                 </div>
                                 <div>
                                     <label className='fw-bolder text-light'>Número de série: </label> {item.serial}
                                 </div>
                                 <div>
-                                    <label className='fw-bolder text-light'>Responsável: </label> {item.responsavel.nome}
+                                    <label className='fw-bolder text-light'>Responsável: </label> {item.responsavel_obj.nome}
                                 </div>
                                 <div>
-                                    <label className='fw-bolder text-light'>Local: </label> {item.localidade.nome}
+                                    <label className='fw-bolder text-light'>Local: </label> {item.localidade_obj.nome}
                                 </div>
                                 <div>
                                     <label className="fw-bolder text-light">Data Criação:</label>  {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
@@ -120,7 +120,7 @@ export default function Ativos() {
                                             </button>
                                         </>
                                     }
-                                    <button className="btn btn-primary" onClick={()=>{router.push('/ativos/formulario/'+item._id) }}>
+                                    <button className="btn btn-primary" onClick={()=>{router.push('/ativos/formulario?id='+item._id) }}>
                                         <FaEdit className='me-1' />
                                         Editar
                                     </button>
