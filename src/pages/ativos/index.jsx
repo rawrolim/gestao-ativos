@@ -15,7 +15,7 @@ export default function Ativos() {
     const [lista, setLista] = useState([]);
     const [busca, setBusca] = useState('');
     const [_id, setId] = useState('');
-    const listaFiltrada = lista.filter(item => item.modelo.toLowerCase().includes(busca.toLowerCase()) || item.serial.toLowerCase().includes(busca.toLowerCase()) || item.responsavel.nome.toLowerCase().includes(busca.toLowerCase()) || item.localidade.nome.toLowerCase().includes(busca.toLowerCase()) || item.matca.nome.toLowerCase().includes(busca.toLowerCase()) || item.tipo_ativo.nome.toLowerCase().includes(busca.toLowerCase()))
+    const listaFiltrada = lista.filter(item => item.modelo.toLowerCase().includes(busca.toLowerCase()) || item.serial.toLowerCase().includes(busca.toLowerCase()) || item.responsavel_obj.nome.toLowerCase().includes(busca.toLowerCase()) || item.localidade_obj.nome.toLowerCase().includes(busca.toLowerCase()) || item.marca_obj.nome.toLowerCase().includes(busca.toLowerCase()) || item.tipo_ativo_obj.nome.toLowerCase().includes(busca.toLowerCase()))
 
     useEffect(() => {
         getLista();
