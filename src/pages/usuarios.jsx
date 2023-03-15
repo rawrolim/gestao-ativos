@@ -59,12 +59,12 @@ export default function Usuarios() {
     }
 
     return (
-        <main className="p-3 col" >
+        <main className="col" >
             <div className="mb-4 fs-4">
                 Usuários
             </div>
             <div className='d-flex flex-wrap justify-content-end'>
-                <div className="col-xs-12 col-md-6 col-xl-4 ">
+                <div className="col-12 col-md-6 col-xl-4 pe-2 ps-2">
                     <input className='form-control' id='buscar' placeholder='Buscar' onChange={e => setBusca(e.target.value)} />
                 </div>
                 <div className=' col-12 d-flex flex-wrap'>

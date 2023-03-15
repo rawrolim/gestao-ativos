@@ -91,13 +91,7 @@ export default async function handler(req, res) {
         const active = await ativo.DB.findByIdAndUpdate(req.body._id, req.body);
         res.status(200).json(active);
     } else if (req.method === 'DELETE') {
-        let active = await ativo.DB.findById(req.body._id);
-        req.body.bloqueado = !active.bloqueado;
-        active = await ativo.DB.findByIdAndUpdate(req.body._id,
-            {
-                updatedAt: new Date(),
-                bloqueado: req.body.bloqueado
-            });
-        res.status(200).json(active);
+        await ativo.DB.findByIdAndDelete(req.body._id);
+        res.status(200).json();
     }
 }

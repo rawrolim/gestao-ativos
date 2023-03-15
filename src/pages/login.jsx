@@ -52,7 +52,7 @@ export default function Login() {
   }
 
   return (
-    <main className={"border col-10 col-md-6 col-xl-3 rounded p-3 ms-auto me-auto shadow " + styles.boxLogin} >
+    <main className={"border col-12 col-md-6 col-xl-3 rounded p-3 ms-auto me-auto shadow " + styles.boxLogin} >
       <h3 className='text-center'>Login</h3>
 
       <div className="form-floating mt-3">
