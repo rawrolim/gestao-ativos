@@ -12,6 +12,7 @@ export default function Formulario() {
     const [usuarios, setUsuario] = useState([]);
     const [localidades, setLocalidades] = useState([]);
     const [historico, setHistorico] = useState([]);
+    const [listaStatus, setListaStatus] = useState([]);
 
     const [modelo, setModelo] = useState('');
     const [tipo_ativo, setTipoAtivo] = useState('');
@@ -19,6 +20,7 @@ export default function Formulario() {
     const [responsavel, setResponsavel] = useState('');
     const [localidade, setLocalidade] = useState('');
     const [serial, setSerial] = useState('');
+    const [status, setStatus] = useState('');
 
     useEffect(() => {
         getAllLists();
@@ -41,6 +43,7 @@ export default function Formulario() {
                 setLocalidade(data.localidade);
                 setSerial(data.serial);
                 setHistorico(data.historico);
+                setStatus(data.status);
             });
     }
 
@@ -75,7 +78,14 @@ export default function Formulario() {
             }
         }).then(r => {
             setLocalidades(r.data);
-        })
+        });
+
+        await axios.get('/api/status', {
+            params: {
+                bloqueado: false
+            }
+        }).then(r => r.data)
+            .then(data => setListaStatus(data))
     }
 
     function salvar() {
@@ -98,6 +108,9 @@ export default function Formulario() {
         if (localidade === '') {
             erro += "Insira a localidade. ";
         }
+        if (status === '') {
+            erro += "Selecione o status. ";
+        }
 
         if (erro === "") {
             if (id) {
@@ -111,7 +124,8 @@ export default function Formulario() {
                     marca: marca,
                     responsavel: responsavel,
                     localidade: localidade,
-                    historico
+                    historico,
+                    status
                 }).then(() => {
                     toast.success("Ativo editado com sucesso.");
                     router.push("/ativos");
@@ -123,7 +137,8 @@ export default function Formulario() {
                     tipo_ativo: tipo_ativo,
                     marca: marca,
                     responsavel: responsavel,
-                    localidade: localidade
+                    localidade: localidade,
+                    status
                 }).then(() => {
                     toast.success("Ativo criado com sucesso.");
                     router.push("/ativos");
@@ -192,6 +207,18 @@ export default function Formulario() {
                 <select value={responsavel} className='form-control' onChange={e => setResponsavel(e.target.value)} >
                     <option value=''>Selecione</option>
                     {usuarios.map(item => {
+                        return (
+                            <option value={item._id} key={item._id}>{item.nome}</option>
+                        )
+                    })}
+                </select>
+            </div>
+
+            <div className='col-12 col-md-6 p-2'>
+                <label className='text-light'>Status</label>
+                <select value={status} className='form-control' onChange={e => setStatus(e.target.value)}>
+                    <option value=''>Selecione</option>
+                    {listaStatus.map(item => {
                         return (
                             <option value={item._id} key={item._id}>{item.nome}</option>
                         )

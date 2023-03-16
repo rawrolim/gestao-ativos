@@ -1,8 +1,4 @@
 import mongoose from '../config/database';
-import localidade from './localidade';
-import marca from './marca';
-import tipo_ativo from './tipo_ativo';
-import usuario from './usuario';
 
 const AtivoSchema = new mongoose.Schema({
     modelo: {
@@ -24,6 +20,9 @@ const AtivoSchema = new mongoose.Schema({
     },
     responsavel: {
         
+    },
+    status: {
+
     },
     createdAt: {
         type: Date,

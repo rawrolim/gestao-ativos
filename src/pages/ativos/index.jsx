@@ -13,12 +13,16 @@ export default function Ativos() {
     const [comentario, setComentario] = useState('');
     const [historico, setHistorico] = useState([]);
     const [lista, setLista] = useState([]);
+    const [listaStatus, setListaStatus] = useState([]);
+    const [listaResponsavel, setListaResponsavel] = useState([]);
     const [busca, setBusca] = useState('');
     const [_id, setId] = useState('');
     const listaFiltrada = lista.filter(item => item.modelo.toLowerCase().includes(busca.toLowerCase()) || item.serial.toLowerCase().includes(busca.toLowerCase()) || item.responsavel_obj.nome.toLowerCase().includes(busca.toLowerCase()) || item.localidade_obj.nome.toLowerCase().includes(busca.toLowerCase()) || item.marca_obj.nome.toLowerCase().includes(busca.toLowerCase()) || item.tipo_ativo_obj.nome.toLowerCase().includes(busca.toLowerCase()))
 
     useEffect(() => {
         getLista();
+        getStatus();
+        getListaResponsavel();
     }, [])
 
     async function getLista() {
@@ -31,17 +35,38 @@ export default function Ativos() {
         });
     }
 
-    async function updateStatus(item) {
-        let acao = ""
-        if (item.bloqueado) {
-            acao = "Liberado"
-        } else {
-            acao = 'Bloqueado'
-        }
-        item.historico.push({ message: `Ativo ${acao}`, createdAt: new Date() });
+    async function updateStatus(item,status_id) {
+        const res_status = await axios.get('/api/status', {
+            params:{
+                _id: status_id
+            }
+        })
+        const status = res_status.data;
+        item.bloqueado=status.bloqueia_ativo;
+        item.status = status._id;
+        item.historico.push({ message: `Status alterado de ${item.status_obj.nome} para ${status.nome}`, createdAt: new Date() });
         await axios.put('/api/ativo', {
             _id: item._id,
-            bloqueado: !item.bloqueado,
+            status: status._id,
+            bloqueado: item.bloqueado,
+            historico: item.historico
+        }).then(r => {
+            toast.success("Status atualizado com sucesso.")
+        });
+        getLista();
+    }
+
+    async function updateResponsavel(item,responsavel_id){
+        const res_status = await axios.get('/api/usuario', {
+            params:{
+                _id: responsavel_id
+            }
+        })
+        const status = res_status.data;
+        item.historico.push({ message: `Reponsável alterado de ${item.responsavel_obj.nome} para ${status.nome}`, createdAt: new Date() });
+        await axios.put('/api/ativo', {
+            _id: item._id,
+            responsavel: responsavel_id,
             historico: item.historico
         }).then(r => {
             toast.success("Status atualizado com sucesso.")
@@ -81,13 +106,35 @@ export default function Ativos() {
         }
     }
 
+    function getStatus() {
+        axios.get('/api/status', {
+            params: {
+                bloqueado: false
+            }
+        }).then(r => r.data)
+            .then(data => setListaStatus(data))
+    }
+
+    function getListaResponsavel(){
+        axios.get('/api/usuario', {
+            params: {
+                bloqueado: false
+            }
+        }).then(r => r.data)
+            .then(data => setListaResponsavel(data))
+    }
+
     return (
         <main className="col" >
-            {isAnalist() || isAdmin() ?
-                <div className='text-end'>
-                    <button className='btn btn-primary' onClick={() => { router.push('/ativos/formulario/') }}>Cadastrar</button>
+
+            <div className='d-flex justify-content-end pe-2 ps-2'>
+                <div className='btn-group col-12 col-md-3'>
+                    {isAnalist() || isAdmin() ?
+                        <button className='btn btn-outline-light border-0' onClick={() => { router.push('/ativos/status') }}>Cadastrar Status</button>
+                        : null}
+                    <button className='btn btn-primary' onClick={() => { router.push('/ativos/formulario/') }}>Cadastrar Ativo</button>
                 </div>
-                : null}
+            </div>
 
             <div className='d-flex justify-content-end mt-3 pe-2 ps-2'>
                 <div className="col-12 col-md-6 col-xl-4 ">
@@ -107,13 +154,10 @@ export default function Ativos() {
                                     <label className='fw-bolder text-light'>Tipo de ativo: </label> {item.tipo_ativo_obj.nome}
                                 </div>
                                 <div>
-                                    <label className='fw-bolder text-light'>marca: </label> {item.marca_obj.nome}
+                                    <label className='fw-bolder text-light'>Marca: </label> {item.marca_obj.nome}
                                 </div>
                                 <div>
                                     <label className='fw-bolder text-light'>Número de série: </label> {item.serial}
-                                </div>
-                                <div>
-                                    <label className='fw-bolder text-light'>Responsável: </label> {item.responsavel_obj.nome}
                                 </div>
                                 <div>
                                     <label className='fw-bolder text-light'>Local: </label> {item.localidade_obj.nome}
@@ -123,6 +167,34 @@ export default function Ativos() {
                                 </div>
                                 <div>
                                     <label className="fw-bolder text-light">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
+                                </div>
+                                <div>
+                                    <label className="fw-bolder text-light">Responsável:</label>
+                                    {isAnalist() || isAdmin() ?
+                                        <select value={item.responsavel_obj._id} onChange={e=>{updateResponsavel(item,e.target.value)}} className='form-control'>
+                                            {listaResponsavel.map(responsavelCurrent => {
+                                                return (
+                                                    <option value={responsavelCurrent._id}>{responsavelCurrent.nome}</option>
+                                                )
+                                            })}
+                                        </select>
+                                        :
+                                        item.responsavel_obj.nome
+                                    }
+                                </div>
+                                <div>
+                                    <label className="fw-bolder text-light">Status:</label>
+                                    {isAnalist() || isAdmin() ?
+                                        <select value={item.status_obj._id} onChange={e=>{updateStatus(item,e.target.value)}} className='form-control'>
+                                            {listaStatus.map(statusCurrent => {
+                                                return (
+                                                    <option value={statusCurrent._id}>{statusCurrent.nome}</option>
+                                                )
+                                            })}
+                                        </select>
+                                        :
+                                        item.status_obj.nome
+                                    }
                                 </div>
 
                                 <div className='btn-group col-12 mt-2'>
@@ -141,19 +213,9 @@ export default function Ativos() {
                                 {isAnalist() || isAdmin() ?
 
                                     <div className='btn-group mt-2 col-12'>
-                                        {!item.bloqueado ?
-                                            <>
-                                                <button className="btn btn-danger" onClick={() => { updateStatus(item) }} >
-                                                    <FaTimes className='me-1' />
-                                                    Bloquear
-                                                </button>
-                                            </>
+                                        {!item.bloqueado ? null
                                             :
                                             <>
-                                                <button className="btn btn-success" onClick={() => { updateStatus(item) }} >
-                                                    <FaCheck className='me-1' />
-                                                    Ativar
-                                                </button>
                                                 <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
                                                     <FaTrash className='me-1' />
                                                     Excluir

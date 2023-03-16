@@ -1,6 +1,7 @@
 import ativo from '@/database/ativo';
 import localidade from '@/database/localidade';
 import marca from '@/database/marca';
+import status from '@/database/status';
 import tipo_ativo from '@/database/tipo_ativo';
 import usuario from '@/database/usuario';
 
@@ -43,6 +44,14 @@ export default async function handler(req, res) {
                         foreignField: "_id",
                         as: "tipo_ativo_obj",
                     }
+                },
+                {
+                    $lookup: {
+                        from: "status",
+                        localField: "status",
+                        foreignField: "_id",
+                        as: "status_obj",
+                    }
                 }
             ])
 
@@ -51,6 +60,7 @@ export default async function handler(req, res) {
                 ativoCurrent.localidade_obj = ativoCurrent.localidade_obj[0];
                 ativoCurrent.responsavel_obj = ativoCurrent.responsavel_obj[0];
                 ativoCurrent.tipo_ativo_obj = ativoCurrent.tipo_ativo_obj[0];
+                ativoCurrent.status_obj = ativoCurrent.status_obj[0];
             });
 
             res.status(200).json(actives);
@@ -66,6 +76,8 @@ export default async function handler(req, res) {
         req.body.tipo_ativo = tipo_ativoBD._id;
         let responsavelBD = await usuario.DB.findById(req.body.responsavel);
         req.body.responsavel = responsavelBD._id;
+        let statusBD = await status.DB.findById(req.body.status);
+        req.body.status = statusBD._id;
 
         const active = await ativo.DB.create(req.body);
         res.status(200).json(active);
@@ -85,6 +97,10 @@ export default async function handler(req, res) {
         if (req.body.responsavel) {
             let responsavelBD = await usuario.DB.findById(req.body.responsavel);
             req.body.responsavel = responsavelBD._id;
+        }
+        if (req.body.status) {
+            let statusBD = await status.DB.findById(req.body.status);
+            req.body.status = statusBD._id;
         }
 
         await ativo.DB.findByIdAndUpdate(req.body._id, { updatedAt: new Date() });
