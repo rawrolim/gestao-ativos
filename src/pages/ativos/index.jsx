@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react';
 import moment from "moment/moment";
-import { FaCheck, FaComment, FaEdit, FaHistory, FaPaperPlane, FaTimes, FaTrash } from 'react-icons/fa';
+import {  FaComment, FaEdit, FaHistory, FaPaperPlane, FaTrash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { UserContext } from '@/store/userContext';
 
@@ -69,7 +69,7 @@ export default function Ativos() {
             responsavel: responsavel_id,
             historico: item.historico
         }).then(r => {
-            toast.success("Status atualizado com sucesso.")
+            toast.success("Responsável alterado com sucesso.")
         });
         getLista();
     }
