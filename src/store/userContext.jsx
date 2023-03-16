@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState, createContext, useEffect } from 'react';
 
@@ -12,16 +13,32 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         let usuarioTemp = JSON.parse(localStorage.getItem('usuario'));
-        setUsuario(usuarioTemp);
-        
+
         if (usuarioTemp !== null && location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== "/formularioUsuario") {
+            getUser(usuarioTemp._id);
             setIntoSystem(true);
         } else {
             setIntoSystem(false);
         }
-    }, []);
+    }, [location.pathname]);
 
-    
+    function isAdmin() {
+        if (usuario !== null) {
+            if (usuario.tipo_acesso === 'ADMINISTRADOR') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function isAnalist() {
+        if (usuario !== null) {
+            if (usuario.tipo_acesso === 'ANALISTA') {
+                return true;
+            }
+        }
+        return false;
+    }
 
     function sair() {
         localStorage.clear();
@@ -30,13 +47,24 @@ export const UserProvider = ({ children }) => {
         router.push('/');
     }
 
+    async function getUser(_id) {
+        await axios.get('/api/usuario', {
+            params: {
+                _id
+            }
+        }).then(r => r.data)
+            .then(data => {
+                setUsuario(data);
+            })
+    }
+
     return (
         <UserContext.Provider value={{
             usuario, setUsuario,
             token, setToken,
             menuAberto, setMenuAberto,
             intoSystem, setIntoSystem,
-            sair
+            sair, isAdmin, isAnalist
         }}>
             {children}
         </UserContext.Provider>

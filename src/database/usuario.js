@@ -36,6 +36,10 @@ const UsuarioSchema = new mongoose.Schema({
     },
     motivo_bloqueio: {
         type: String
+    },
+    tipo_acesso: {
+        type:String,
+        default: 'USUARIO'
     }
 });
 

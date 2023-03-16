@@ -5,12 +5,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import { UserProvider } from '../store/userContext';
 import { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
+import { useRouter } from 'next/router';
 
 export default function App({ Component, pageProps }) {
+  const router = useRouter();
 
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.min.js");
   }, []);
+
+  console.log()
 
   return (
     <UserProvider >
@@ -18,7 +22,7 @@ export default function App({ Component, pageProps }) {
       <ToastContainer />
       <div className='d-flex flex-wrap'>
         <Menu />
-        <div className='col p-3 d-flex flex-wrap'>
+        <div className={`col d-flex flex-wrap ${router.pathname==='/'?'':'p-3'}`} >
           <Component {...pageProps} />
         </div>
       </div>

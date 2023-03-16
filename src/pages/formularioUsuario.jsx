@@ -4,6 +4,7 @@ import { useState } from 'react';
 import InputMask from 'react-input-mask';
 import { toast } from 'react-toastify';
 import { Input } from 'reactstrap';
+import styles from '../styles/login.module.scss';
 
 export default function formularioUsuario() {
     const router = useRouter();
@@ -78,7 +79,7 @@ export default function formularioUsuario() {
     }
 
     return (
-        <main className="d-flex flex-wrap">
+        <main className={"d-flex flex-wrap border col-12 col-md-8 rounded p-3 ms-auto me-auto shadow " + styles.boxLogin} style={{marginTop: '10vh'}}>
             <h3 className='col-12 text-center p-3'>Formulário de usuário</h3>
             <div className="form-floating col-12 pe-2 ps-2">
                 <input id='nome' type='text' value={nome} onChange={e => setNome(e.target.value)} className={nome ? 'form-control is-valid' : 'form-control ' + erroNome} placeholder="Nome" />
@@ -108,8 +109,8 @@ export default function formularioUsuario() {
             </div>
 
             <div className='col-12 mt-3 text-center btn-group'>
-                <button className='btn btn-lg btn-secondary col-6 col-xl-3' onClick={()=>{router.push('/login')}}>Cancelar</button>
-                <button className='btn btn-lg btn-primary col-6 col-xl-3' onClick={save}>Salvar</button>
+                <button className='btn btn-outline-light text-dark border-0 col-6 col-xl-3' onClick={()=>{router.push('/')}}>Cancelar</button>
+                <button className='btn btn-dark col-6 col-xl-3' onClick={save}>Salvar</button>
             </div>
         </main>
     )

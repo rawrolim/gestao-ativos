@@ -6,12 +6,13 @@ import { toast } from "react-toastify";
 import { UserContext } from "@/store/userContext";
 
 export default function Usuarios() {
-    const { usuario } = useContext(UserContext);
+    const { usuario,isAdmin } = useContext(UserContext);
     const [motivo_bloqueio_txt, setMotivoBloqueioTxt] = useState("");
     const [_id, setId] = useState("");
     const [busca, setBusca] = useState("");
     const [lista, setLista] = useState([]);
     const listaFiltrada = lista.filter(item => item.nome.toLowerCase().includes(busca.toLowerCase()) || item.email.toLowerCase().includes(busca.toLowerCase()));
+    const acessos = ["ADMINISTRADOR", "USUARIO", "ANALISTA"];
 
     useEffect(() => {
         getLista();
@@ -58,6 +59,19 @@ export default function Usuarios() {
         getLista();
     }
 
+    async function updateTipoAcesso(tipo_acesso, _id) {
+        toast.promise(
+            axios.put('/api/usuario', {
+                tipo_acesso,
+                _id
+            }).then(r => {
+                toast.success('Permissões de acesso do usuário alterado.')
+            }),
+            { 'pending': 'Enviando dados...' }
+        );
+        getLista()
+    }
+
     return (
         <main className="col" >
             <div className="mb-4 fs-4">
@@ -92,25 +106,44 @@ export default function Usuarios() {
                                     <div>
                                         <label className="fw-bolder text-light">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
                                     </div>
-                                    <div className='btn-group mt-2 col-12'>
-                                        {!item.bloqueado ?
-                                            <button className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalUser" onClick={() => { setId(item._id) }} >
-                                                <FaTimes />
-                                                Bloquear
-                                            </button>
-                                            :
-                                            <>
-                                                <button className="btn btn-success" onClick={() => { ativarStatus(item._id, item.bloqueado) }} >
-                                                    <FaCheck />
-                                                    Ativar
-                                                </button>
-                                                <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
-                                                    <FaTrash />
-                                                    Excluir
-                                                </button>
-                                            </>
-                                        }
-                                    </div>
+                                    {isAdmin() ?
+                                        <>
+                                            <div>
+                                                <label className="fw-bolder text-white">Tipo de Acesso:</label>
+                                                <select value={item.tipo_acesso} onChange={e => updateTipoAcesso(e.target.value, item._id)} class='form-control'>
+                                                    <option value=''>Selecione</option>
+                                                    {acessos.map(acessoCurrent => {
+                                                        return <option value={acessoCurrent}>{acessoCurrent}</option>
+                                                    })}
+                                                </select>
+                                            </div>
+                                            <div className='btn-group mt-2 col-12'>
+                                                {!item.bloqueado ?
+                                                    <button className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalUser" onClick={() => { setId(item._id) }} >
+                                                        <FaTimes />
+                                                        Bloquear
+                                                    </button>
+                                                    :
+                                                    <>
+                                                        <button className="btn btn-success" onClick={() => { ativarStatus(item._id, item.bloqueado) }} >
+                                                            <FaCheck />
+                                                            Ativar
+                                                        </button>
+                                                        <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
+                                                            <FaTrash />
+                                                            Excluir
+                                                        </button>
+                                                    </>
+                                                }
+                                            </div>
+                                        </>
+                                        :
+                                        <>
+                                            <div>
+                                                <label className="fw-bolder text-light">Tipo de Acesso:</label>  {item.tipo_acesso}
+                                            </div>
+                                        </>
+                                    }
                                 </div>
                             </div>
                         )

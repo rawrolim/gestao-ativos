@@ -146,16 +146,16 @@ export default function Formulario() {
 
             <div className='col-12 col-md-6 p-2'>
                 <label className='text-light'>Modelo</label>
-                <input value={modelo} type="text" className="form-control" onChange={e => { setModelo(e.target.value) }} />
+                <input value={modelo} type="text" disabled={id?true:false} className="form-control" onChange={e => { setModelo(e.target.value) }} />
             </div>
             <div className='col-12 col-md-6 p-2'>
                 <label className='text-light'>Número de série</label>
-                <input value={serial} type="text" className="form-control" onChange={e => { setSerial(e.target.value) }} />
+                <input value={serial} type="text" disabled={id?true:false} className="form-control" onChange={e => { setSerial(e.target.value) }} />
             </div>
 
             <div className='col-12 col-md-6 p-2'>
                 <label className='text-light'>Tipo de Ativo</label>
-                <select value={tipo_ativo} className='form-control' onChange={e => setTipoAtivo(e.target.value)} >
+                <select value={tipo_ativo} disabled={id?true:false} className='form-control' onChange={e => setTipoAtivo(e.target.value)} >
                     <option value=''>Selecione</option>
                     {tipo_ativos.map(item => {
                         return (
@@ -166,7 +166,7 @@ export default function Formulario() {
             </div>
             <div className='col-12 col-md-6 p-2'>
                 <label className='text-light'>Marca</label>
-                <select value={marca} className='form-control' onChange={e => setMarca(e.target.value)}>
+                <select value={marca} disabled={id?true:false} className='form-control' onChange={e => setMarca(e.target.value)}>
                     <option value=''>Selecione</option>
                     {marcas.map(item => {
                         return (

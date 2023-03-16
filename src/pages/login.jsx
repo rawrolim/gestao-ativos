@@ -14,6 +14,7 @@ export default function Login() {
   const { setUsuario, setToken, setIntoSystem } = useContext(UserContext);
 
   function logar() {
+    toast.promise(
     axios.post('/api/login', {
       email,
       senha
@@ -24,7 +25,6 @@ export default function Login() {
           toast.error(data.usuario.motivo_bloqueio);
           setSenhasetReenvioMsg(true);
           setUsuarioReenvio(data.usuario);
-
         } else {
           localStorage.setItem("usuario", JSON.stringify(data.usuario));
           localStorage.setItem("token", data.token);
@@ -39,6 +39,10 @@ export default function Login() {
       .catch(err => {
         toast.error('Error ao entrar.')
       })
+      ,{
+        'pending': 'Enviando dados...'
+      }
+    )
   }
 
   async function reenviarMag() {
@@ -53,6 +57,9 @@ export default function Login() {
 
   return (
     <main className={"border col-12 col-md-6 col-xl-3 rounded p-3 ms-auto me-auto shadow " + styles.boxLogin} >
+      <a onClick={()=>{ router.push('/') }} style={{textDecoration: 'underline'}}>
+        Voltar
+      </a>
       <h3 className='text-center'>Login</h3>
 
       <div className="form-floating mt-3">
@@ -75,9 +82,9 @@ export default function Login() {
         <div className='text-end pt-2'>
           <a onClick={()=>{ router.push('/esqueci_senha') }} style={{textDecoration: 'underline'}}>Esqueci a senha</a>
         </div>
-        <div className=' mt-3 d-grid gap-2'>
-          <button className='btn btn-primary' onClick={logar}>Entrar</button>
-          <button className='btn btn-secondary' onClick={() => { router.push('formularioUsuario') }}>Cadastrar</button>
+        <div className=' mt-3 btn-group col-12'>
+          <button className='btn col-6 btn-outline-light border-0 text-dark' onClick={() => { router.push('formularioUsuario') }}>Cadastrar</button>
+          <button className='btn col-6 btn-dark' onClick={logar}>Entrar</button>
         </div>
       </div>
     </main>

@@ -5,7 +5,7 @@ import styles from '../styles/menu.module.scss'
 import Header from "./header";
 
 export default function Menu() {
-    const { usuario, menuAberto, sair } = useContext(UserContext);
+    const { usuario, menuAberto } = useContext(UserContext);
     const router = useRouter();
 
     if (usuario !== null && menuAberto) {

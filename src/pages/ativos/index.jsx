@@ -8,7 +8,7 @@ import { UserContext } from '@/store/userContext';
 
 export default function Ativos() {
     const router = useRouter();
-    const { usuario } = useContext(UserContext);
+    const { usuario, isAnalist, isAdmin } = useContext(UserContext);
     const [comentarios, setComentarios] = useState([]);
     const [comentario, setComentario] = useState('');
     const [historico, setHistorico] = useState([]);
@@ -83,9 +83,11 @@ export default function Ativos() {
 
     return (
         <main className="col" >
-            <div className='text-end'>
-                <button className='btn btn-primary' onClick={() => { router.push('/ativos/formulario/') }}>Cadastrar</button>
-            </div>
+            {isAnalist() || isAdmin() ?
+                <div className='text-end'>
+                    <button className='btn btn-primary' onClick={() => { router.push('/ativos/formulario/') }}>Cadastrar</button>
+                </div>
+                : null}
 
             <div className='d-flex justify-content-end mt-3 pe-2 ps-2'>
                 <div className="col-12 col-md-6 col-xl-4 ">
@@ -136,31 +138,34 @@ export default function Ativos() {
                                     </button>
                                 </div>
 
-                                <div className='btn-group mt-2 col-12'>
-                                    {!item.bloqueado ?
-                                        <>
-                                            <button className="btn btn-danger" onClick={() => { updateStatus(item) }} >
-                                                <FaTimes className='me-1' />
-                                                Bloquear
-                                            </button>
-                                        </>
-                                        :
-                                        <>
-                                            <button className="btn btn-success" onClick={() => { updateStatus(item) }} >
-                                                <FaCheck className='me-1' />
-                                                Ativar
-                                            </button>
-                                            <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
-                                                <FaTrash className='me-1' />
-                                                Excluir
-                                            </button>
-                                        </>
-                                    }
-                                    <button className="btn btn-primary" onClick={() => { router.push('/ativos/formulario?id=' + item._id) }}>
-                                        <FaEdit className='me-1' />
-                                        Editar
-                                    </button>
-                                </div>
+                                {isAnalist() || isAdmin() ?
+
+                                    <div className='btn-group mt-2 col-12'>
+                                        {!item.bloqueado ?
+                                            <>
+                                                <button className="btn btn-danger" onClick={() => { updateStatus(item) }} >
+                                                    <FaTimes className='me-1' />
+                                                    Bloquear
+                                                </button>
+                                            </>
+                                            :
+                                            <>
+                                                <button className="btn btn-success" onClick={() => { updateStatus(item) }} >
+                                                    <FaCheck className='me-1' />
+                                                    Ativar
+                                                </button>
+                                                <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
+                                                    <FaTrash className='me-1' />
+                                                    Excluir
+                                                </button>
+                                            </>
+                                        }
+                                        <button className="btn btn-primary" onClick={() => { router.push('/ativos/formulario?id=' + item._id) }}>
+                                            <FaEdit className='me-1' />
+                                            Editar
+                                        </button>
+                                    </div>
+                                    : null}
                             </div>
                         </div>
                     )
@@ -203,11 +208,11 @@ export default function Ativos() {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            {usuario!==null && comentarios.map(comentarioCurrent => {
+                            {usuario !== null && comentarios.map((comentarioCurrent, i) => {
                                 return (
                                     <>
                                         {comentarioCurrent.usuario._id === usuario._id ?
-                                            <div className='d-flex flex-wrap pb-2 pt-2 text-end' key={comentarioCurrent.createdAt}>
+                                            <div className='d-flex flex-wrap pb-2 pt-2 text-end' key={i}>
                                                 <div className={`text-muted col me-1`} style={{ fontSize: '11px' }}>
                                                     {comentarioCurrent.usuario.nome}
                                                 </div>
@@ -220,10 +225,10 @@ export default function Ativos() {
                                             </div>
                                             :
                                             <div className='d-flex flex-wrap pb-2 pt-2' key={comentarioCurrent.createdAt}>
-                                                <div className={`text-muted col me-1`} style={{ fontSize: '11px' }}>
+                                                <div className={`text-muted col-auto me-1`} style={{ fontSize: '11px' }}>
                                                     {comentarioCurrent.usuario.nome}
                                                 </div>
-                                                <div className={`text-muted col-auto`} style={{ fontSize: '11px' }}>
+                                                <div className={`text-muted col`} style={{ fontSize: '11px' }}>
                                                     {moment(comentarioCurrent.createdAt).format("DD/MM/YYYY HH:mm")}
                                                 </div>
                                                 <div className='text-dark col-12'>
@@ -235,14 +240,16 @@ export default function Ativos() {
                                 )
                             })}
                         </div>
-                        <div className='modal-footer'>
-                            <div className='btn-group col-12'>
-                                <input className='form-control' value={comentario} placeholder="Mensagem" onChange={e => setComentario(e.target.value)} />
-                                <button className='btn text-dark' onClick={comentar}>
-                                    <FaPaperPlane />
-                                </button>
+                        {isAnalist() || isAdmin() ?
+                            <div className='modal-footer'>
+                                <div className='btn-group col-12'>
+                                    <input className='form-control' value={comentario} placeholder="Mensagem" onChange={e => setComentario(e.target.value)} />
+                                    <button className='btn text-dark' onClick={comentar}>
+                                        <FaPaperPlane />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                            : null}
                     </div>
                 </div>
             </div>

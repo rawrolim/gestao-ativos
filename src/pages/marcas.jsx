@@ -1,10 +1,12 @@
+import { UserContext } from "@/store/userContext";
 import axios from "axios";
 import moment from "moment/moment";
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { FaCheck, FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 export default function Marcas() {
+    const { isAdmin, isAnalist } = useContext(UserContext);
     const [nome, setNome] = useState('');
     const [_id, setId] = useState('');
     const [busca, setBusca] = useState('');
@@ -42,20 +44,20 @@ export default function Marcas() {
             _id,
             bloqueado: !status
         });
-        toast.success(`Marca ${!status? 'bloqueada': 'ativada'} com sucesso.`)
+        toast.success(`Marca ${!status ? 'bloqueada' : 'ativada'} com sucesso.`)
         getLista();
     }
 
-    async function deleteItem(_id){
+    async function deleteItem(_id) {
         await axios.delete('/api/marca', {
             data: {
                 _id
             }
         })
-        .then(()=>{
-            toast.success("Marca deletada com sucesso.");
-            getLista();
-        })
+            .then(() => {
+                toast.success("Marca deletada com sucesso.");
+                getLista();
+            })
     }
 
     return (
@@ -63,16 +65,18 @@ export default function Marcas() {
             <div className="mb-4 fs-4">
                 Marcas
             </div>
-            <div className='form-floating btn-group col-12'>
-                <input value={nome} className='form-control' id='cadastrar' type='text' placeholder="Cadastrar" onChange={e => setNome(e.target.value)} />
-                <label htmlFor='cadastrar'>Nome</label>
-                <button className="btn btn-primary" onClick={salvar}>
-                    {_id == '' ?
-                        "Cadastrar"
-                        : "Atualizar"
-                    }
-                </button>
-            </div>
+            {isAnalist() || isAdmin() ?
+                <div className='form-floating btn-group col-12'>
+                    <input value={nome} className='form-control' id='cadastrar' type='text' placeholder="Cadastrar" onChange={e => setNome(e.target.value)} />
+                    <label htmlFor='cadastrar'>Nome</label>
+                    <button className="btn btn-primary" onClick={salvar}>
+                        {_id == '' ?
+                            "Cadastrar"
+                            : "Atualizar"
+                        }
+                    </button>
+                </div>
+                : null}
 
             <div className='mt-5'>
                 {lista.length > 0 && lista ?
@@ -100,29 +104,31 @@ export default function Marcas() {
                                             <div>
                                                 <label className="fw-bolder text-light">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
                                             </div>
-                                            <div className='btn-group mt-2 col-12'>
-                                                {!item.bloqueado ?
-                                                    <button className="btn btn-danger" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
-                                                        <FaTimes />
-                                                        Bloquear
+                                            {isAnalist() || isAdmin() ?
+                                                <div className='btn-group mt-2 col-12'>
+                                                    {!item.bloqueado ?
+                                                        <button className="btn btn-danger" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
+                                                            <FaTimes />
+                                                            Bloquear
+                                                        </button>
+                                                        :
+                                                        <>
+                                                            <button className="btn btn-success" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
+                                                                <FaCheck />
+                                                                Ativar
+                                                            </button>
+                                                            <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
+                                                                <FaTrash />
+                                                                Excluir
+                                                            </button>
+                                                        </>
+                                                    }
+                                                    <button className="btn btn-primary" onClick={() => { setId(item._id); setNome(item.nome) }}>
+                                                        <FaEdit />
+                                                        Editar
                                                     </button>
-                                                    :
-                                                    <>
-                                                        <button className="btn btn-success" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
-                                                            <FaCheck />
-                                                            Ativar
-                                                        </button>
-                                                        <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
-                                                            <FaTrash />
-                                                            Excluir
-                                                        </button>
-                                                    </>
-                                                }
-                                                <button className="btn btn-primary" onClick={() => { setId(item._id); setNome(item.nome) }}>
-                                                    <FaEdit />
-                                                    Editar
-                                                </button>
-                                            </div>
+                                                </div>
+                                                : null}
                                         </div>
                                     </div>
                                 )
