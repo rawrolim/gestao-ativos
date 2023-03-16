@@ -23,13 +23,7 @@ export default async function handler(req, res) {
         const locale = await localidade.DB.findByIdAndUpdate(req.body._id, req.body);
         res.status(200).json(locale);
     } else if (req.method === 'DELETE') {
-        let locale = await localidade.DB.findById(req.body._id);
-        req.body.bloqueado = !locale.bloqueado;
-        locale = await localidade.DB.findByIdAndUpdate(req.body._id,
-            {
-                updatedAt: new Date(),
-                bloqueado: req.body.bloqueado
-            });
-        res.status(200).json(locale);
+        await localidade.DB.findByIdAndDelete(req.body._id)
+        res.status(200).json();
     }
 }
