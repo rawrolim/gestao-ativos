@@ -23,7 +23,7 @@ export default function Login() {
 
       <section className='text-center col-12 mt-5 pt-5 pb-5'>
         <h1>Asset Mate</h1>
-        <h4>O sistema de getão de ativo que você pode confiar</h4>
+        <h4>O sistema de gestão de ativo que você pode confiar</h4>
         <div className='text-center d-flex frex-wrap justify-content-center mt-5'>
           <button onClick={() => { router.push('formularioUsuario') }} className='btn btn-outline-light border-0 col-4 col-md-4 col-lg-2 rounded-0'>Cadastrar</button>
           <button onClick={() => { router.push('login') }} className='btn btn-dark border-0 col-4 col-md-4 col-lg-2 rounded-0'>Entrar</button>
