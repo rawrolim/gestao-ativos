@@ -14,13 +14,13 @@ export const UserProvider = ({ children }) => {
     useEffect(() => {
         let usuarioTemp = JSON.parse(localStorage.getItem('usuario'));
 
-        if (usuarioTemp !== null && location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== "/formularioUsuario") {
+        if (usuarioTemp !== null && router.pathname !== '/' && router.pathname !== '/login' && router.pathname !== "/formularioUsuario") {
             getUser(usuarioTemp._id);
             setIntoSystem(true);
         } else {
             setIntoSystem(false);
         }
-    }, [location.pathname]);
+    }, [router.pathname]);
 
     function isAdmin() {
         if (usuario !== null) {
