@@ -24,8 +24,8 @@ export default function Header(props) {
                                 <label className="text-light">Olá, {usuario.nome}</label>
                                 <FaUserCircle size={30} className="ms-2" />
                             </button>
-                            <ul class="dropdown-menu " aria-labelledby="dropdownUser">
-                                <li><a class="dropdown-item" onClick={sair}>Sair</a></li>
+                            <ul className="dropdown-menu " aria-labelledby="dropdownUser">
+                                <li><a className="dropdown-item" onClick={sair}>Sair</a></li>
                             </ul>
                         </div>
                         : null}
