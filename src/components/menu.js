@@ -22,7 +22,8 @@ export default function Menu() {
                         <li className="list-group-item" onClick={() => { router.push('/marcas') }}>Marcas</li>
                         <li className="list-group-item" onClick={() => { router.push('/tipo_ativos') }}>Tipo Ativo</li>
                         <li className="list-group-item" onClick={() => { router.push('/localidades') }}>Local</li>
-                        <li className="list-group-item" onClick={() => { router.push('/usuarios') }}>Usuários</li>
+                        <li className="list-group-item" onClick={() => { router.push('/insumos') }}>Insumos</li>
+                        {usuario.tipo_acesso !== 'USUARIO' && <li className="list-group-item" onClick={() => { router.push('/usuarios') }}>Usuários</li> }
                     </ul>
                 </aside>
             </>
