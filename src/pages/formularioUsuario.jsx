@@ -63,11 +63,6 @@ export default function formularioUsuario() {
             .then(async (r)=>{
                 const data = r.data;
                 toast.success('Usuário salvo com sucesso');
-                await axios.post('/api/email',{
-                    id: data._id,
-                    nome: data.nome,
-                    email: data.email
-                });
                 router.push('login');
             }).catch(e=>{
                 toast.error(e.message);

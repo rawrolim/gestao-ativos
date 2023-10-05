@@ -32,7 +32,7 @@ const UsuarioSchema = new mongoose.Schema({
     },
     bloqueado: {
         type: Boolean,
-        default: true,
+        default: false,
     },
     motivo_bloqueio: {
         type: String

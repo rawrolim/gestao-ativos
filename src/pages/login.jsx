@@ -4,6 +4,9 @@ import { toast } from "react-toastify";
 import styles from '../styles/login.module.scss';
 import React, { useState, useContext } from 'react';
 import { UserContext } from "@/store/userContext";
+import {auth} from '../config/firebase';
+import {signInWithEmailAndPassword} from "firebase/auth";
+import md5 from 'md5';
 
 export default function Login() {
   const router = useRouter();
@@ -19,12 +22,19 @@ export default function Login() {
       email,
       senha
     })
-      .then(res => {
+      .then(async (res) => {
         const data = res.data;
+        const credential = await signInWithEmailAndPassword(auth, email, md5(senha));
+        if(!credential.user.emailVerified){
+          data.usuario.bloqueado = true;
+          data.usuario.motivo_bloqueio = "Verifique o e-mail para entrar no aplicativo.";
+        }else{
+          data.usuario.bloqueado = false;
+        }
         if (data.usuario.bloqueado) {
           toast.error(data.usuario.motivo_bloqueio);
-          setSenhasetReenvioMsg(true);
-          setUsuarioReenvio(data.usuario);
+          //setSenhasetReenvioMsg(true);
+          //setUsuarioReenvio(data.usuario);
         } else {
           localStorage.setItem("usuario", JSON.stringify(data.usuario));
           localStorage.setItem("token", data.token);
@@ -37,7 +47,7 @@ export default function Login() {
         }
       })
       .catch(err => {
-        toast.error('Error ao entrar.')
+        toast.error('Error ao entrar.');
       })
       ,{
         'pending': 'Enviando dados...'

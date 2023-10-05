@@ -1,5 +1,7 @@
 import usuarioDB from '@/database/usuario'
 import md5 from 'md5';
+import {sendEmailVerification, createUserWithEmailAndPassword} from "firebase/auth";
+import {auth} from '../../config/firebase';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -18,11 +20,19 @@ export default async function handler(req, res) {
       }
       res.status(200).json(users);
     }
+
   } else if (req.method === 'POST') {
     req.body.senha = md5(req.body.senha);
-    req.body.motivo_bloqueio = "Pendente confirmação de e-mail.";
+    //req.body.motivo_bloqueio = "Pendente confirmação de e-mail.";
+
+    const userCredential = await createUserWithEmailAndPassword(auth, req.body.email, req.body.senha);
     const user = await usuarioDB.DB.create(req.body);
+
+    await sendEmailVerification(userCredential.user);
+    await auth.signOut();
+
     res.status(200).json(user);
+
   } else if (req.method === 'PUT') {
     if (req.body.senha) {
       const userActual = await usuarioDB.DB.findById(req.body._id);
@@ -35,6 +45,7 @@ export default async function handler(req, res) {
     await usuarioDB.DB.findByIdAndUpdate(req.body._id, { updatedAt: new Date() });
     const user = await usuarioDB.DB.findByIdAndUpdate(req.body._id, req.body);
     res.status(200).json(user);
+
   } else if (req.method === 'DELETE') {
     await usuarioDB.DB.findByIdAndDelete(req.body._id)
     res.status(200).json();
