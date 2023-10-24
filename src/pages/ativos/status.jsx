@@ -1,3 +1,4 @@
+import CardComponent from "@/components/cardComponent";
 import { UserContext } from "@/store/userContext";
 import axios from "axios";
 import moment from "moment/moment";
@@ -29,13 +30,13 @@ export default function Marcas() {
         if (_id === '') {
             await axios.post('/api/status', {
                 nome: nome.toUpperCase(),
-                bloqueia_ativo: bloqueia_ativo==='true'? true:false
+                bloqueia_ativo: bloqueia_ativo === 'true' ? true : false
             });
         } else {
             await axios.put('/api/status', {
                 _id,
                 nome: nome.toUpperCase(),
-                bloqueia_ativo: bloqueia_ativo==='true'? true:false
+                bloqueia_ativo: bloqueia_ativo === 'true' ? true : false
             });
         }
         toast.success('status cadastrado com sucesso.');
@@ -110,50 +111,48 @@ export default function Marcas() {
                         <div className='d-flex flex-wrap'>
                             {listaFiltrada.map(item => {
                                 return (
-                                    <div key={item._id} className="col-12 col-md-4 col-xl-3 rounded p-2">
-                                        <div className="border p-2 rounded">
-                                            <div>
-                                                <label className="fw-bolder text-light">Nome:</label> {item.nome}
-                                            </div>
-                                            <div>
-                                                <label className="fw-bolder text-light">Bloqueia Ativo:</label>  {item.bloqueia_ativo ? "Sim" : "Não"}
-                                            </div>
-                                            <div>
-                                                <label className="fw-bolder text-light">Bloqueado:</label>  {item.bloqueado ? "Sim" : "Não"}
-                                            </div>
-                                            <div>
-                                                <label className="fw-bolder text-light">Data Criação:</label>  {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
-                                            </div>
-                                            <div>
-                                                <label className="fw-bolder text-light">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
-                                            </div>
-                                            {isAnalist() || isAdmin() ?
-                                                <div className='btn-group mt-2 col-12'>
-                                                    {!item.bloqueado ?
-                                                        <button className="btn btn-danger" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
-                                                            <FaTimes />
-                                                            Bloquear
-                                                        </button>
-                                                        :
-                                                        <>
-                                                            <button className="btn btn-success" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
-                                                                <FaCheck />
-                                                                Ativar
-                                                            </button>
-                                                            <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
-                                                                <FaTrash />
-                                                                Excluir
-                                                            </button>
-                                                        </>
-                                                    }
-                                                    <button className="btn btn-primary" onClick={() => { setId(item._id); setNome(item.nome) }}>
-                                                        <FaEdit />
-                                                        Editar
-                                                    </button>
-                                                </div>
-                                                : null}
+                                    <CardComponent key={item._id} >
+                                        <div>
+                                            <label className="fw-bolder">Nome:</label> {item.nome}
                                         </div>
-                                    </div>
+                                        <div>
+                                            <label className="fw-bolder">Bloqueia Ativo:</label>  {item.bloqueia_ativo ? "Sim" : "Não"}
+                                        </div>
+                                        <div>
+                                            <label className="fw-bolder">Bloqueado:</label>  {item.bloqueado ? "Sim" : "Não"}
+                                        </div>
+                                        <div>
+                                            <label className="fw-bolder">Data Criação:</label>  {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
+                                        </div>
+                                        <div>
+                                            <label className="fw-bolder">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
+                                        </div>
+                                        {isAnalist() || isAdmin() ?
+                                            <div className='btn-group mt-2 col-12'>
+                                                {!item.bloqueado ?
+                                                    <button className="btn btn-danger" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
+                                                        <FaTimes />
+                                                        Bloquear
+                                                    </button>
+                                                    :
+                                                    <>
+                                                        <button className="btn btn-success" onClick={() => { updateStatus(item._id, item.bloqueado) }} >
+                                                            <FaCheck />
+                                                            Ativar
+                                                        </button>
+                                                        <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
+                                                            <FaTrash />
+                                                            Excluir
+                                                        </button>
+                                                    </>
+                                                }
+                                                <button className="btn btn-primary" onClick={() => { setId(item._id); setNome(item.nome) }}>
+                                                    <FaEdit />
+                                                    Editar
+                                                </button>
+                                            </div>
+                                            : null}
+                                    </CardComponent>
                                 )
                             })}
                         </div>

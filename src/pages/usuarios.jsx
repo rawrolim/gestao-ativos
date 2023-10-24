@@ -4,9 +4,10 @@ import moment from "moment/moment";
 import { FaCheck, FaTimes, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { UserContext } from "@/store/userContext";
+import CardComponent from "@/components/cardComponent";
 
 export default function Usuarios() {
-    const { usuario,isAdmin } = useContext(UserContext);
+    const { usuario, isAdmin } = useContext(UserContext);
     const [motivo_bloqueio_txt, setMotivoBloqueioTxt] = useState("");
     const [_id, setId] = useState("");
     const [busca, setBusca] = useState("");
@@ -84,74 +85,72 @@ export default function Usuarios() {
                 <div className=' col-12 d-flex flex-wrap'>
                     {listaFiltrada.map(item => {
                         return (
-                            <div key={item._id} className="col-12 col-md-4 col-xl-3 rounded p-2">
-                                <div className="border p-2 rounded">
-                                    <div>
-                                        <label className="fw-bolder text-white">Nome:</label> {item.nome}
-                                    </div>
-                                    <div>
-                                        <label className="fw-bolder text-white">E-mail:</label> {item.email}
-                                    </div>
-                                    <div>
-                                        <label className="fw-bolder text-white">Telefone:</label> {item.telefone}
-                                    </div>
-                                    {item.bloqueado ?
-                                        <div>
-                                            <label className="fw-bolder text-white">Bloqueado:</label> {item.motivo_bloqueio}
-                                        </div>
-                                        : null}
-                                    <div>
-                                        <label className="fw-bolder text-light">Data Criação:</label>  {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
-                                    </div>
-                                    <div>
-                                        <label className="fw-bolder text-light">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
-                                    </div>
-                                    {isAdmin() ?
-                                        <>
-                                            <div>
-                                                <label className="fw-bolder text-white">Tipo de Acesso:</label>
-                                                <select value={item.tipo_acesso} onChange={e => updateTipoAcesso(e.target.value, item._id)} className='form-control'>
-                                                    <option value=''>Selecione</option>
-                                                    {acessos.map(acessoCurrent => {
-                                                        return <option value={acessoCurrent}>{acessoCurrent}</option>
-                                                    })}
-                                                </select>
-                                            </div>
-                                            <div className='btn-group mt-2 col-12'>
-                                                {!item.bloqueado ?
-                                                    <button className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalUser" onClick={() => { setId(item._id) }} >
-                                                        <FaTimes />
-                                                        Bloquear
-                                                    </button>
-                                                    :
-                                                    <>
-                                                        <button className="btn btn-success" onClick={() => { ativarStatus(item._id, item.bloqueado) }} >
-                                                            <FaCheck />
-                                                            Ativar
-                                                        </button>
-                                                        <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
-                                                            <FaTrash />
-                                                            Excluir
-                                                        </button>
-                                                    </>
-                                                }
-                                            </div>
-                                        </>
-                                        :
-                                        <>
-                                            <div>
-                                                <label className="fw-bolder text-light">Tipo de Acesso:</label>  {item.tipo_acesso}
-                                            </div>
-                                        </>
-                                    }
+                            <CardComponent key={item._id} >
+                                <div>
+                                    <label className="fw-bolder">Nome:</label> {item.nome}
                                 </div>
-                            </div>
+                                <div>
+                                    <label className="fw-bolder">E-mail:</label> {item.email}
+                                </div>
+                                <div>
+                                    <label className="fw-bolder">Telefone:</label> {item.telefone}
+                                </div>
+                                {item.bloqueado ?
+                                    <div>
+                                        <label className="fw-bolder">Bloqueado:</label> {item.motivo_bloqueio}
+                                    </div>
+                                    : null}
+                                <div>
+                                    <label className="fw-bolder">Data Criação:</label>  {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
+                                </div>
+                                <div>
+                                    <label className="fw-bolder">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
+                                </div>
+                                {isAdmin() ?
+                                    <>
+                                        <div>
+                                            <label className="fw-bolder">Tipo de Acesso:</label>
+                                            <select value={item.tipo_acesso} onChange={e => updateTipoAcesso(e.target.value, item._id)} className='form-control'>
+                                                <option value=''>Selecione</option>
+                                                {acessos.map(acessoCurrent => {
+                                                    return <option key={acessoCurrent} value={acessoCurrent}>{acessoCurrent}</option>
+                                                })}
+                                            </select>
+                                        </div>
+                                        <div className='btn-group mt-2 col-12'>
+                                            {!item.bloqueado ?
+                                                <button className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalUser" onClick={() => { setId(item._id) }} >
+                                                    <FaTimes />
+                                                    Bloquear
+                                                </button>
+                                                :
+                                                <>
+                                                    <button className="btn btn-success" onClick={() => { ativarStatus(item._id, item.bloqueado) }} >
+                                                        <FaCheck />
+                                                        Ativar
+                                                    </button>
+                                                    <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
+                                                        <FaTrash />
+                                                        Excluir
+                                                    </button>
+                                                </>
+                                            }
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <div>
+                                            <label className="fw-bolder text-light">Tipo de Acesso:</label>  {item.tipo_acesso}
+                                        </div>
+                                    </>
+                                }
+                            </CardComponent>
                         )
                     })}
                 </div>
             </div>
 
-            <div className="modal fade" id="modalUser" tabindex="-1" aria-labelledby="modalUserLabel" aria-hidden="true">
+            <div className="modal fade" id="modalUser" tabIndex="-1" aria-labelledby="modalUserLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">

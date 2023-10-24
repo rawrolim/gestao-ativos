@@ -1,3 +1,4 @@
+import CardComponent from "@/components/cardComponent";
 import { UserContext } from "@/store/userContext";
 import axios from "axios";
 import moment from "moment/moment";
@@ -102,53 +103,51 @@ export default function Home() {
                         <div className='d-flex flex-wrap'>
                             {listaFiltrada.map(item => {
                                 return (
-                                    <div key={item._id} className="col-12 col-md-4 col-xl-3 rounded p-2">
-                                        <div className="border p-2 rounded bg-light text-dark">
-                                            <div>
-                                                <label className="fw-bolder ">Nome:</label> {item.nome}
-                                            </div>
-                                            <div>
-
-                                                <label className="fw-bolder ">Qtd.:</label>
-                                                {(item.qtd > 0 && isAdmin()) &&
-                                                    <button className='btn' onClick={() => { salvar({ _id: item._id, nome: item.nome, obs: item.obs, qtd: item.qtd - 1 }) }}>
-                                                        <FaMinus />
-                                                    </button>
-                                                }
-                                                <label className='ms-2 me-2'>
-                                                    {item.qtd}
-                                                </label>
-                                                {isAdmin() &&
-                                                    <button className='btn' onClick={() => { salvar({ _id: item._id, nome: item.nome, obs: item.obs, qtd: item.qtd + 1 }) }}>
-                                                        <FaPlus />
-                                                    </button>
-                                                }
-                                            </div>
-                                            {item.obs !== '' &&
-                                                <div>
-                                                    <label className="fw-bolder ">Obs:</label> {item.obs}
-                                                </div>
-                                            }
-                                            <div>
-                                                <label className="fw-bolder ">Data Criação:</label>  {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
-                                            </div>
-                                            <div>
-                                                <label className="fw-bolder ">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
-                                            </div>
-                                            {isAnalist() || isAdmin() ?
-                                                <div className='btn-group mt-2 col-12'>
-                                                    <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
-                                                        <FaTrash />
-                                                        Excluir
-                                                    </button>
-                                                    <button className="btn btn-primary" onClick={() => { setId(item._id); setNome(item.nome) }}>
-                                                        <FaEdit />
-                                                        Editar
-                                                    </button>
-                                                </div>
-                                                : null}
+                                    <CardComponent key={item._id}>
+                                        <div>
+                                            <label className="fw-bolder ">Nome:</label> {item.nome}
                                         </div>
-                                    </div>
+                                        <div>
+
+                                            <label className="fw-bolder ">Qtd.:</label>
+                                            {(item.qtd > 0 && isAdmin()) &&
+                                                <button className='btn' onClick={() => { salvar({ _id: item._id, nome: item.nome, obs: item.obs, qtd: item.qtd - 1 }) }}>
+                                                    <FaMinus />
+                                                </button>
+                                            }
+                                            <label className='ms-2 me-2'>
+                                                {item.qtd}
+                                            </label>
+                                            {isAdmin() &&
+                                                <button className='btn' onClick={() => { salvar({ _id: item._id, nome: item.nome, obs: item.obs, qtd: item.qtd + 1 }) }}>
+                                                    <FaPlus />
+                                                </button>
+                                            }
+                                        </div>
+                                        {item.obs !== '' &&
+                                            <div>
+                                                <label className="fw-bolder ">Obs:</label> {item.obs}
+                                            </div>
+                                        }
+                                        <div>
+                                            <label className="fw-bolder ">Data Criação:</label>  {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
+                                        </div>
+                                        <div>
+                                            <label className="fw-bolder ">Última Atualização:</label>  {moment(item.updatedAt).format("DD/MM/YYYY HH:mm")}
+                                        </div>
+                                        {isAnalist() || isAdmin() ?
+                                            <div className='btn-group mt-2 col-12'>
+                                                <button className="btn btn-danger" onClick={() => { deleteItem(item._id) }} >
+                                                    <FaTrash />
+                                                    Excluir
+                                                </button>
+                                                <button className="btn btn-primary" onClick={() => { setId(item._id); setNome(item.nome) }}>
+                                                    <FaEdit />
+                                                    Editar
+                                                </button>
+                                            </div>
+                                            : null}
+                                    </CardComponent>
                                 )
                             })}
                         </div>
