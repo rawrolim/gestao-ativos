@@ -1,3 +1,4 @@
+import ErrorComponent from '@/components/errorComponent';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState, createContext, useEffect } from 'react';
@@ -66,7 +67,21 @@ export const UserProvider = ({ children }) => {
             intoSystem, setIntoSystem,
             sair, isAdmin, isAnalist
         }}>
-            {children}
+            {(router.pathname == '/' || router.pathname == '/login' || router.pathname == "/formularioUsuario") ?
+                <>
+                    {children}
+                </>
+                :
+                <>
+                    {!intoSystem ? 
+                        <ErrorComponent />
+                        :
+                        <>
+                            {children}
+                        </>
+                    }
+                </>
+            }
         </UserContext.Provider>
     );
 }
