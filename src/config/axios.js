@@ -10,13 +10,14 @@ async function refreshToken() {
             Authorization: getToken()
         }
     });
-    
+
     localStorage.setItem("token", res.data);
 }
 
-async function get(uri) {
+async function get(uri, options = {}) {
     try {
         const res = await axios.get(uri, {
+            ...options,
             headers: {
                 Authorization: getToken()
             }
@@ -25,59 +26,71 @@ async function get(uri) {
     } catch (e) {
         if (e.response.status == 401) {
             await refreshToken();
-            return await get(uri);
-        }else{
+            return await get(uri, options);
+        } else {
             return e;
         }
     }
 }
 
-async function put(uri, body) {
-    const res = await axios.put(uri, body,
-        {
-            headers: {
-                Authorization: getToken()
+async function put(uri, body, options = {}) {
+    try {
+        const res = await axios.put(uri, body,
+            {
+                ...options,
+                headers: {
+                    Authorization: getToken()
+                }
             }
-        }
-    );
-
-    if (res.status == 401) {
-        await refreshToken();
-        return await put(uri, body);
-    } else {
+        );
         return res;
+    } catch (e) {
+        if (e.response.status == 401) {
+            await refreshToken();
+            return await put(uri, body, options);
+        } else {
+            return e;
+        }
     }
 }
 
-async function post(uri, body) {
-    const res = await axios.post(uri, body,
-        {
-            headers: {
-                Authorization: getToken()
+async function post(uri, body, options = {}) {
+    try {
+        const res = await axios.post(uri, body,
+            {
+                ...options,
+                headers: {
+                    Authorization: getToken()
+                }
             }
-        }
-    );
-
-    if (res.status == 401) {
-        await refreshToken();
-        return await post(uri, body);
-    } else {
+        );
         return res;
+    } catch (e) {
+        if (e.response.status == 401) {
+            await refreshToken();
+            return await post(uri, body, options);
+        } else {
+            return e;
+        }
     }
 }
 
-async function delet(uri) {
-    const res = await axios.delete(uri, {
-        headers: {
-            Authorization: getToken()
-        }
-    });
-
-    if (res.status == 401) {
-        await refreshToken();
-        return await delet(uri);
-    } else {
+async function delet(uri, options = {}) {
+    try {
+        const res = await axios.delete(uri, {
+            ...options,
+            headers: {
+                Authorization: getToken()
+            }
+        });
         return res;
+    } catch (e) {
+        if (e.response.status == 401) {
+            await refreshToken();
+            return await delet(uri, options);
+        } else {
+            return e;
+        }
     }
 }
 
