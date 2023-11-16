@@ -1,154 +1,70 @@
-import { UserContext } from "@/store/userContext";
-import axios from "axios";
-import { useContext, useEffect, useState } from 'react'
+import axios from "@/config/axios";
+import { useEffect, useState } from 'react'
+import Chart from 'chart.js/auto';
 
 export default function Home() {
-  const [ativos, setAtivos] = useState({ liberado: 0, total: 0 });
-  const [locais, setLocais] = useState({ liberado: 0, total: 0 });
-  const [marcas, setMarcas] = useState({ liberado: 0, total: 0 });
-  const [tipos, setTipos] = useState({ liberado: 0, total: 0 });
-  const [usuarios, setUsuarios] = useState({ liberado: 0, total: 0 });
+  const [grafico, setGrafico] = useState(null);
 
   useEffect(() => {
-    getLista()
+    getLista();
   }, []);
 
   function getLista() {
-    axios.get('/api/ativo')
+    axios.get('/api/dashboard')
       .then(r => r.data)
       .then(data => {
-        setAtivos({
-          liberado: data.filter(item => item.bloqueado === false).length,
-          total: data.length
-        })
+        const body = data.body;
+        drawChart('chart-locale', 'Ativos por localidade', 'pie', body.localidade.label, body.localidade.qtd);
+        drawChart('chart-status', 'Ativos por status', 'pie', body.status.label, body.status.qtd);
+        drawChart('chart-type', 'Tipos de ativo', 'bar', body.tipo_ativo.label, body.tipo_ativo.qtd);
+        setGrafico(body);
       });
+  }
 
-    axios.get('/api/localidade')
-      .then(r => r.data)
-      .then(data => {
-        setLocais({
-          liberado: data.filter(item => item.bloqueado === false).length,
-          total: data.length
-        })
-      });
-
-    axios.get('/api/marca')
-      .then(r => r.data)
-      .then(data => {
-        setMarcas({
-          liberado: data.filter(item => item.bloqueado === false).length,
-          total: data.length
-        })
-      });
-
-    axios.get('/api/tipo_ativo')
-      .then(r => r.data)
-      .then(data => {
-        setTipos({
-          liberado: data.filter(item => item.bloqueado === false).length,
-          total: data.length
-        })
-      });
-
-    axios.get('/api/usuario')
-      .then(r => r.data)
-      .then(data => {
-        setUsuarios({
-          liberado: data.filter(item => item.bloqueado === false).length,
-          total: data.length
-        })
-      });
+  function drawChart(id, label, type, labels, data) {
+    new Chart(
+      document.getElementById(id),
+      {
+        type: type,
+        data: {
+          labels: labels,
+          datasets: [{
+            label: label,
+            data: data,
+            hoverOffset: 4,
+          }]
+        }
+      }
+    );
   }
 
   return (
     <main className="col-12 d-flex flex-wrap" >
-      <div className='col-12 col-md-4 col-lg-3  mb-3 p-3'>
+      <div className='col-12 col-md-4 mb-3 p-3'>
         <div className='border d-flex flex-wrap shadow bg-white text-dark rounded p-3'>
-          <div className='fs-3 col-auto align-self-center'>
-            Ativos
+          <div className='fs-5 col-auto align-self-center'>
+            Ativos por status
           </div>
-          <div className='col'>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>Liberado</div>
-              <div className='col'>Total</div>
-            </div>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>{ativos.liberado}</div>
-              <div className='col'>{ativos.total}</div>
-            </div>
-          </div>
+          <div className='col-12'><canvas id="chart-status" style={{ width: 'auto' }}></canvas></div>
         </div>
       </div>
 
-      <div className='col-12 col-md-4 col-lg-3  mb-3 p-3'>
+      <div className='col-12 col-md-4 mb-3 p-3'>
         <div className='border d-flex flex-wrap shadow bg-white text-dark rounded p-3'>
-          <div className='fs-3 col-auto align-self-center'>
-            Locais
+          <div className='fs-5 col-auto align-self-center'>
+            Ativos por local
           </div>
-          <div className='col'>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>Liberado</div>
-              <div className='col'>Total</div>
-            </div>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>{locais.liberado}</div>
-              <div className='col'>{locais.total}</div>
-            </div>
-          </div>
+
+          <div className='col-12'><canvas id="chart-locale" style={{ width: 'auto' }}></canvas></div>
         </div>
       </div>
 
-      <div className='col-12 col-md-4 col-lg-3  mb-3 p-3'>
+      <div className='col-12 col-md-4 mb-3 p-3'>
         <div className='border d-flex flex-wrap shadow bg-white text-dark rounded p-3'>
-          <div className='fs-3 col-auto align-self-center'>
-            Marcas
+          <div className='fs-5 col-auto align-self-center'>
+            Quantidade de tipo de ativo
           </div>
-          <div className='col'>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>Liberado</div>
-              <div className='col'>Total</div>
-            </div>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>{marcas.liberado}</div>
-              <div className='col'>{marcas.total}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className='col-12 col-md-4 col-lg-3  mb-3 p-3'>
-        <div className='border d-flex flex-wrap shadow bg-white text-dark rounded p-3'>
-          <div className='fs-3 col-auto align-self-center'>
-            Tipos
-          </div>
-          <div className='col'>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>Liberado</div>
-              <div className='col'>Total</div>
-            </div>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>{tipos.liberado}</div>
-              <div className='col'>{tipos.total}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className='col-12 col-md-4 col-lg-3  mb-3 p-3'>
-        <div className='border d-flex flex-wrap shadow bg-white text-dark rounded p-3'>
-          <div className='fs-3 col-auto align-self-center'>
-            Usuários
-          </div>
-          <div className='col'>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>Liberado</div>
-              <div className='col'>Total</div>
-            </div>
-            <div className='d-flex flex-wrap text-center'>
-              <div className='col'>{usuarios.liberado}</div>
-              <div className='col'>{usuarios.total}</div>
-            </div>
-          </div>
+          <div className='col-12'><canvas id="chart-type" style={{ width: 'auto' }}></canvas></div>
         </div>
       </div>
     </main>

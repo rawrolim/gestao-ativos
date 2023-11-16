@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/config/axios";
 import { useContext, useEffect, useState } from "react";
 import moment from "moment/moment";
 import { FaCheck, FaTimes, FaTrash } from "react-icons/fa";

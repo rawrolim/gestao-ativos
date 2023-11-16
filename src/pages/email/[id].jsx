@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "@/config/axios";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 

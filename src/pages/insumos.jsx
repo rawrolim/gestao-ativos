@@ -1,6 +1,6 @@
 import CardComponent from "@/components/cardComponent";
 import { UserContext } from "@/store/userContext";
-import axios from "axios";
+import axios from "@/config/axios";
 import moment from "moment/moment";
 import { useContext, useEffect, useState } from "react"
 import { FaEdit, FaMinus, FaPlus, FaTrash } from "react-icons/fa";
@@ -110,7 +110,7 @@ export default function Home() {
                                         <div>
 
                                             <label className="fw-bolder ">Qtd.:</label>
-                                            {(item.qtd > 0 && isAdmin()) &&
+                                            {(item.qtd > 0 && (isAnalist() || isAdmin())) &&
                                                 <button className='btn' onClick={() => { salvar({ _id: item._id, nome: item.nome, obs: item.obs, qtd: item.qtd - 1 }) }}>
                                                     <FaMinus />
                                                 </button>
@@ -118,7 +118,7 @@ export default function Home() {
                                             <label className='ms-2 me-2'>
                                                 {item.qtd}
                                             </label>
-                                            {isAdmin() &&
+                                            {(isAnalist() || isAdmin()) &&
                                                 <button className='btn' onClick={() => { salvar({ _id: item._id, nome: item.nome, obs: item.obs, qtd: item.qtd + 1 }) }}>
                                                     <FaPlus />
                                                 </button>

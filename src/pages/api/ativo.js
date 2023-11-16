@@ -4,15 +4,16 @@ import marca from '@/database/marca';
 import status from '@/database/status';
 import tipo_ativo from '@/database/tipo_ativo';
 import usuario from '@/database/usuario';
+import authMiddleware from '@/middleware/authMiddleware';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
 
     if (req.method === 'GET') {
         if (req.query._id) {
-            const active = await ativo.DB.findById(req.query._id);
-            res.status(200).json(active);
+            const assets = await ativo.DB.findById(req.query._id);
+            res.status(200).json(assets);
         } else {
-            const actives = await ativo.DB.aggregate([
+            const assets = await ativo.DB.aggregate([
                 {
                     $lookup: {
                         from: "marcas",
@@ -55,7 +56,7 @@ export default async function handler(req, res) {
                 }
             ])
 
-            actives.map(ativoCurrent => {
+            assets.map(ativoCurrent => {
                 ativoCurrent.marca_obj = ativoCurrent.marca_obj[0];
                 ativoCurrent.localidade_obj = ativoCurrent.localidade_obj[0];
                 ativoCurrent.responsavel_obj = ativoCurrent.responsavel_obj[0];
@@ -63,7 +64,7 @@ export default async function handler(req, res) {
                 ativoCurrent.status_obj = ativoCurrent.status_obj[0];
             });
 
-            res.status(200).json(actives);
+            res.status(200).json(assets);
         }
     } else if (req.method === 'POST') {
         req.body.historico = [{ message: 'Ativo criado', createdAt: new Date() }];
@@ -111,3 +112,5 @@ export default async function handler(req, res) {
         res.status(200).json();
     }
 }
+
+export default authMiddleware(handler);

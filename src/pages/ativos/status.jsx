@@ -1,6 +1,6 @@
 import CardComponent from "@/components/cardComponent";
 import { UserContext } from "@/store/userContext";
-import axios from "axios";
+import axios from "@/config/axios";
 import moment from "moment/moment";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react"

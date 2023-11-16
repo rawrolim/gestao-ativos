@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "@/config/axios";
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useState } from 'react';
 import moment from "moment/moment";
