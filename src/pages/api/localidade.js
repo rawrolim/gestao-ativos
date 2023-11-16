@@ -1,6 +1,7 @@
 import localidade from '@/database/localidade';
+import authMiddleware from '@/middleware/authMiddleware';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
 
     if (req.method === 'GET') {
         if (req.query._id) {
@@ -27,3 +28,5 @@ export default async function handler(req, res) {
         res.status(200).json();
     }
 }
+
+export default authMiddleware(handler);

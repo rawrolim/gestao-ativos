@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         }
         const jwtData = {
             email: usuario.email,
-            exp: Math.floor(Date.now() / 1000) + (10),
+            exp: Math.floor(Date.now() / 1000) + (30),
             refreshToken: generateToken()
         };
 

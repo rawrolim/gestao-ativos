@@ -1,5 +1,5 @@
 import ErrorComponent from '@/components/errorComponent';
-import axios from 'axios';
+import axios from '@/config/axios';
 import { useRouter } from 'next/router';
 import { useState, createContext, useEffect } from 'react';
 
@@ -55,7 +55,8 @@ export const UserProvider = ({ children }) => {
             }
         }).then(r => r.data)
             .then(data => {
-                setUsuario(data);
+                if(data.length > 0)
+                    setUsuario(data[0]);
             })
     }
 

@@ -124,7 +124,7 @@ export default function Ativos() {
         }).then(r => r.data)
             .then(data => setListaResponsavel(data))
     }
-
+    
     return (
         <main className="col" >
 

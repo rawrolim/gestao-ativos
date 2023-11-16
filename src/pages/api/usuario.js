@@ -2,8 +2,9 @@ import usuarioDB from '@/database/usuario'
 import md5 from 'md5';
 import {sendEmailVerification, createUserWithEmailAndPassword} from "firebase/auth";
 import {auth} from '../../config/firebase';
+import authMiddleware from '@/middleware/authMiddleware';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method === 'GET') {
     if (req.query._id) {
       const user = await usuarioDB.DB.findById(req.query._id);
@@ -23,7 +24,6 @@ export default async function handler(req, res) {
 
   } else if (req.method === 'POST') {
     req.body.senha = md5(req.body.senha);
-    //req.body.motivo_bloqueio = "Pendente confirmação de e-mail.";
 
     const userCredential = await createUserWithEmailAndPassword(auth, req.body.email, req.body.senha);
     const user = await usuarioDB.DB.create(req.body);
@@ -51,3 +51,5 @@ export default async function handler(req, res) {
     res.status(200).json();
   }
 }
+
+export default authMiddleware(handler);
