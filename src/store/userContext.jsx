@@ -49,15 +49,17 @@ export const UserProvider = ({ children }) => {
     }
 
     async function getUser(_id) {
-        await axios.get('/api/usuario', {
-            params: {
-                _id
-            }
-        }).then(r => r.data)
+        try{
+        await axios.get('/api/usuario?_id='+_id)
+            .then(r => r.data)
             .then(data => {
-                if(data.length > 0)
-                    setUsuario(data[0]);
-            })
+                if (data) {
+                    setUsuario(data);
+                }
+            });
+        }catch(e){
+            await getUser(_id)
+        }
     }
 
     return (
@@ -74,7 +76,7 @@ export const UserProvider = ({ children }) => {
                 </>
                 :
                 <>
-                    {!intoSystem ? 
+                    {!intoSystem ?
                         <ErrorComponent />
                         :
                         <>
